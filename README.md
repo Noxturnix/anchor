@@ -13,6 +13,10 @@ In Handshake, we can use our domain names with smart contracts by following [HIP
 
 This is where Anchor comes in to play. Anchor is a minimalized smart contract to serve DNSLink data for HNS name. Instead of deploying entire ENS system, we can pick only what we use to reduce gas fees
 
+![Anchor resolution diagram](imgs/anchor-resolution-diagram.png)
+
 Anchor gives users ability to lock names, so that they will become immutable on-chain. This will only makes sense if the name is also transfed to a [renew-only address](https://github.com/handshake-org/hsd/pull/567) on HNS blockchain
 
 Users are supposed to deploy this contract and use it with their own names themselves individually
+
+![Anchor deployment diagram](imgs/anchor-deployment-diagram.png)
