@@ -10,7 +10,7 @@ contract Anchor {
   address public owner;
   mapping(bytes32 => string) private _ipfs;
   mapping(bytes32 => bool) private _locked;
-  mapping(bytes32 => bytes) private _dnslinkOf;
+  mapping(bytes32 => bytes) private _nameOf;
 
   /**
    * @notice Thrown when caller is not the owner
@@ -66,7 +66,7 @@ contract Anchor {
     if (ipfsCIDLength > 0 && resource == 16)
       return
         abi.encodePacked(
-          _dnslinkOf[wireformatNamehash],
+          _nameOf[wireformatNamehash],
           "\x00\x10\x00\x01\x00\x00\x0e\x10\x00",
           ipfsCIDLength + 14 + 1,
           ipfsCIDLength + 14,
@@ -87,14 +87,13 @@ contract Anchor {
     string calldata ipfsCID,
     bool lock
   ) external onlyOwner {
-    bytes memory dnsLinkWireformatName = _dnsLinkWireformat(wireformatName);
-    bytes32 dnsLinkWireformatNamehash = keccak256(dnsLinkWireformatName);
+    bytes32 wireformatNameHash = keccak256(wireformatName);
 
-    if (_locked[dnsLinkWireformatNamehash]) revert LockedName();
+    if (_locked[wireformatNameHash]) revert LockedName();
 
-    _dnslinkOf[dnsLinkWireformatNamehash] = dnsLinkWireformatName;
-    _ipfs[dnsLinkWireformatNamehash] = ipfsCID;
-    _locked[dnsLinkWireformatNamehash] = lock;
+    _nameOf[wireformatNameHash] = wireformatName;
+    _ipfs[wireformatNameHash] = ipfsCID;
+    _locked[wireformatNameHash] = lock;
   }
 
   /**
@@ -102,11 +101,11 @@ contract Anchor {
    * @param wireformatName Name encoded in wire format
    */
   function resetIPFS(bytes calldata wireformatName) external onlyOwner {
-    bytes32 dnsLinkWireformatNamehash = keccak256(_dnsLinkWireformat(wireformatName));
+    bytes32 wireformatNameHash = keccak256(wireformatName);
 
-    if (_locked[dnsLinkWireformatNamehash]) revert LockedName();
+    if (_locked[wireformatNameHash]) revert LockedName();
 
-    delete _ipfs[dnsLinkWireformatNamehash];
+    delete _ipfs[wireformatNameHash];
   }
 
   /**
@@ -114,7 +113,7 @@ contract Anchor {
    * @param wireformatName Name encoded in wire format
    */
   function lockName(bytes calldata wireformatName) external onlyOwner {
-    _locked[keccak256(_dnsLinkWireformat(wireformatName))] = true;
+    _locked[keccak256(wireformatName)] = true;
   }
 
   /**
@@ -122,14 +121,6 @@ contract Anchor {
    * @param wireformatName Name encoded in wire format
    */
   function isLocked(bytes calldata wireformatName) external view returns (bool) {
-    return _locked[keccak256(_dnsLinkWireformat(wireformatName))];
-  }
-
-  /**
-   * @dev Add _dnslink subdomain to `wireformatName`
-   * @param wireformatName Name encoded in wire format
-   */
-  function _dnsLinkWireformat(bytes calldata wireformatName) private pure returns (bytes memory) {
-    return bytes.concat("\x08\x5f\x64\x6e\x73\x6c\x69\x6e\x6b", wireformatName);
+    return _locked[keccak256(wireformatName)];
   }
 }

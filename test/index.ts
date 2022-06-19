@@ -45,13 +45,13 @@ describe("Anchor", function () {
       (
         await anchor.dnsRecord(
           "0x0000000000000000000000000000000000000000000000000000000000000000",
-          namehash(`_dnslink.${TEST_NAME_1}`),
+          namehash(TEST_NAME_1),
           16
         )
       ).substring(2)
     );
 
-    expect(dnsRecordCIDv0.name).to.equal(`_dnslink.${TEST_NAME_1}.`);
+    expect(dnsRecordCIDv0.name).to.equal(TEST_NAME_1 + ".");
     expect(dnsRecordCIDv0.type).to.equal(16);
     expect(dnsRecordCIDv0.data.txt).to.contain("dnslink=/ipfs/" + testCIDv0);
 
@@ -61,13 +61,13 @@ describe("Anchor", function () {
       (
         await anchor.dnsRecord(
           "0x0000000000000000000000000000000000000000000000000000000000000000",
-          namehash(`_dnslink.${TEST_NAME_1}`),
+          namehash(TEST_NAME_1),
           16
         )
       ).substring(2)
     );
 
-    expect(dnsRecordCIDv1.name).to.equal(`_dnslink.${TEST_NAME_1}.`);
+    expect(dnsRecordCIDv1.name).to.equal(TEST_NAME_1 + ".");
     expect(dnsRecordCIDv1.type).to.equal(16);
     expect(dnsRecordCIDv1.data.txt).to.contain("dnslink=/ipfs/" + testCIDv1);
   });
@@ -83,7 +83,7 @@ describe("Anchor", function () {
     expect(
       await anchor.dnsRecord(
         "0x0000000000000000000000000000000000000000000000000000000000000000",
-        namehash(`_dnslink.${TEST_NAME_1}`),
+        namehash(TEST_NAME_1),
         16
       )
     ).to.equal("0x");
