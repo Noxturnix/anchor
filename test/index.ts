@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { ethers, deployments } from "hardhat";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
-import { encodeName, namehash } from "../libs/wireformat";
+import { decodeRdata, encodeName, namehash } from "../libs/wireformat";
 const { wire } = require("bns");
 
 const TEST_NAME_1 = "noxturnix";
@@ -41,14 +41,12 @@ describe("Anchor", function () {
 
     await expect(anchor.setIPFS(encodeName(TEST_NAME_1), testCIDv0, false)).to.not.reverted;
 
-    let dnsRecordCIDv0 = new wire.Record().fromHex(
-      (
-        await anchor.dnsRecord(
-          "0x0000000000000000000000000000000000000000000000000000000000000000",
-          namehash(TEST_NAME_1),
-          16
-        )
-      ).substring(2)
+    let dnsRecordCIDv0 = decodeRdata(
+      await anchor.dnsRecord(
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+        namehash(TEST_NAME_1),
+        16
+      )
     );
 
     expect(dnsRecordCIDv0.name).to.equal(TEST_NAME_1 + ".");
@@ -57,14 +55,12 @@ describe("Anchor", function () {
 
     await expect(anchor.setIPFS(encodeName(TEST_NAME_1), testCIDv1, false)).to.not.reverted;
 
-    let dnsRecordCIDv1 = new wire.Record().fromHex(
-      (
-        await anchor.dnsRecord(
-          "0x0000000000000000000000000000000000000000000000000000000000000000",
-          namehash(TEST_NAME_1),
-          16
-        )
-      ).substring(2)
+    let dnsRecordCIDv1 = decodeRdata(
+      await anchor.dnsRecord(
+        "0x0000000000000000000000000000000000000000000000000000000000000000",
+        namehash(TEST_NAME_1),
+        16
+      )
     );
 
     expect(dnsRecordCIDv1.name).to.equal(TEST_NAME_1 + ".");
