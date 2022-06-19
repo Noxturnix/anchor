@@ -9,14 +9,16 @@ import "hardhat-gas-reporter";
 import "solidity-coverage";
 import "hardhat-deploy";
 import { boolean } from "hardhat/internal/core/params/argumentTypes";
-import { encodeName } from "./libs/wireformat";
+import { decodeRdata, encodeName, namehash } from "./libs/wireformat";
 
 dotenv.config();
+
+const exampleDomain = "n.xtnx";
 
 task("set-ipfs", "Set a name to an IPFS CID")
   .addOptionalParam("lock", "Lock `name` from further changes after the operation", false, boolean)
   .addPositionalParam("contractAddress", "Address of the Anchor smart contract to update")
-  .addPositionalParam("name", 'Domain name. (eg. "n.xtnx")')
+  .addPositionalParam("name", `Domain name. (eg. "${exampleDomain}")`)
   .addPositionalParam("ipfsCID", "The IPFS CID")
   .setAction(async (args, hre) => {
     const AnchorFactory = await hre.ethers.getContractFactory("Anchor");
@@ -27,9 +29,30 @@ task("set-ipfs", "Set a name to an IPFS CID")
     console.log(`Successfully set IPFS on ${args.name}`);
   });
 
+task("get-ipfs", "Get the IPFS CID of a name")
+  .addPositionalParam("contractAddress", "Address of the Anchor smart contract to interact with")
+  .addPositionalParam("name", `Domain name. (eg. "${exampleDomain}")`)
+  .setAction(async (args, hre) => {
+    const AnchorFactory = await hre.ethers.getContractFactory("Anchor");
+    const Anchor = AnchorFactory.attach(args.contractAddress);
+
+    let rdata: string = await Anchor.dnsRecord(
+      "0x0000000000000000000000000000000000000000000000000000000000000000",
+      namehash(args.name),
+      16
+    );
+
+    if (rdata === "0x") console.error(`No IPFS record found for ${args.name}`);
+    else {
+      let record = decodeRdata(rdata);
+
+      console.log(record.data.txt[0].substring(14));
+    }
+  });
+
 task("reset-ipfs", "Reset the IPFS CID of a name")
   .addPositionalParam("contractAddress", "Address of the Anchor smart contract to update")
-  .addPositionalParam("name", 'Domain name. (eg. "n.xtnx")')
+  .addPositionalParam("name", `Domain name. (eg. "${exampleDomain}")`)
   .setAction(async (args, hre) => {
     const AnchorFactory = await hre.ethers.getContractFactory("Anchor");
     const Anchor = AnchorFactory.attach(args.contractAddress);
@@ -41,7 +64,7 @@ task("reset-ipfs", "Reset the IPFS CID of a name")
 
 task("lock-name", "Lock a name from further changes")
   .addPositionalParam("contractAddress", "Address of the Anchor smart contract to update")
-  .addPositionalParam("name", 'Domain name. (eg. "n.xtnx")')
+  .addPositionalParam("name", `Domain name. (eg. "${exampleDomain}")`)
   .setAction(async (args, hre) => {
     const AnchorFactory = await hre.ethers.getContractFactory("Anchor");
     const Anchor = AnchorFactory.attach(args.contractAddress);

@@ -13,6 +13,7 @@
     "test": "hardhat test",
     "clean": "hardhat clean",
     "set-ipfs": "hardhat set-ipfs",
+    "get-ipfs": "hardhat get-ipfs",
     "reset-ipfs": "hardhat reset-ipfs",
     "lock-name": "hardhat lock-name",
     "set-owner": "hardhat set-owner"
