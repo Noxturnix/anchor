@@ -27,7 +27,7 @@ task("set-ipfs", "Set a name to an IPFS CID")
     console.log(`Successfully set IPFS on ${args.name}`);
   });
 
-task("reset-ipfs", "Reset IPFS record for a name")
+task("reset-ipfs", "Reset the IPFS CID of a name")
   .addPositionalParam("contractAddress", "Address of the Anchor smart contract to update")
   .addPositionalParam("name", 'Domain name. (eg. "n.xtnx")')
   .setAction(async (args, hre) => {
@@ -51,7 +51,7 @@ task("lock-name", "Lock a name from further changes")
     console.log(`Successfully locked ${args.name}`);
   });
 
-task("set-owner", "Set smart contract owner")
+task("set-owner", "Set an address as the contract owner")
   .addPositionalParam("contractAddress", "Address of the Anchor smart contract to update")
   .addPositionalParam("ownerAddress", "The new owner address")
   .setAction(async (args, hre) => {

@@ -38,7 +38,7 @@ contract Anchor {
   }
 
   /**
-   * @notice Set contract ownership to a new address
+   * @notice Set an address as the contract owner
    * @param newOwner The new owner of the contract
    */
   function setOwner(address newOwner) external onlyOwner {
@@ -77,7 +77,7 @@ contract Anchor {
   }
 
   /**
-   * @notice Set IPFS CID to a name
+   * @notice Set a name to an IPFS CID
    * @param wireformatName Name encoded in wire format
    * @param ipfsCID IPFS CID
    * @param lock Whether to lock the name from further changes after the process is done
@@ -97,7 +97,7 @@ contract Anchor {
   }
 
   /**
-   * @notice Reset IPFS CID for a name
+   * @notice Reset the IPFS CID of a name
    * @param wireformatName Name encoded in wire format
    */
   function resetIPFS(bytes calldata wireformatName) external onlyOwner {
