@@ -74,6 +74,18 @@ task("lock-name", "Lock a name from further changes")
     console.log(`Successfully locked ${args.name}`);
   });
 
+task("is-locked", "Check if a name is locked")
+  .addPositionalParam("contractAddress", "Address of the Anchor smart contract to interact with")
+  .addPositionalParam("name", `Domain name. (eg. "${exampleDomain}")`)
+  .setAction(async (args, hre) => {
+    const AnchorFactory = await hre.ethers.getContractFactory("Anchor");
+    const Anchor = AnchorFactory.attach(args.contractAddress);
+
+    let locked = await Anchor.isLocked(encodeName(args.name));
+
+    console.log(`Name ${args.name} is ${locked ? "locked" : "not locked"}`);
+  });
+
 task("set-owner", "Set an address as the contract owner")
   .addPositionalParam("contractAddress", "Address of the Anchor smart contract to update")
   .addPositionalParam("ownerAddress", "The new owner address")

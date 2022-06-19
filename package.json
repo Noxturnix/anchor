@@ -16,6 +16,7 @@
     "get-ipfs": "hardhat get-ipfs",
     "reset-ipfs": "hardhat reset-ipfs",
     "lock-name": "hardhat lock-name",
+    "is-locked": "hardhat is-locked",
     "set-owner": "hardhat set-owner"
   },
   "devDependencies": {
